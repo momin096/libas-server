@@ -1,4 +1,4 @@
- 
+
 
 require("dotenv").config();
 const express = require('express');
@@ -61,6 +61,12 @@ async function run() {
             res.send(result)
         })
 
+        // get new arrivals 
+        app.get('/new-arrivals', async (req, res) => {
+            const filter = { showcase: 'new-arrivals' }
+            const result = await productsCollection.find(filter).toArray()
+            res.send(result)
+        })
 
 
 
