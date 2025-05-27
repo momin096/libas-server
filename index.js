@@ -1,5 +1,4 @@
-// 
-// 
+ 
 
 require("dotenv").config();
 const express = require('express');
@@ -11,7 +10,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173'],
+    credentials: true,
+}));
 app.use(express.json());
 
 
@@ -33,6 +35,7 @@ async function run() {
         const db = client.db('libasbd2')
 
         const usersCollection = db.collection('users');
+        const productsCollection = db.collection('products');
 
         // users related apis
         // add a user 
@@ -45,6 +48,16 @@ async function run() {
             const user = req.body
             user.role = 'customer';
             const result = await usersCollection.insertOne(user)
+            res.send(result)
+        })
+
+
+        // Product related apis --------------------------------
+
+        // add a product 
+        app.post('/products', async (req, res) => {
+            const product = req.body
+            const result = await productsCollection.insertOne(product)
             res.send(result)
         })
 
