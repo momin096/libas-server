@@ -3,8 +3,7 @@
 require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
-
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -68,6 +67,41 @@ async function run() {
             res.send(result)
         })
 
+
+        app.get('/product/:id', async (req, res) => {
+            const id = req.params.id
+            const product = await productsCollection.findOne({ _id: new ObjectId(id) })
+            res.send(product)
+        })
+
+
+        app.get('/products', async (req, res) => {
+            const products = await productsCollection.find().toArray()
+            res.send(products)
+        })
+
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id
+            const result = await productsCollection.deleteOne({ _id: new ObjectId(id) })
+            res.send(result)
+        })
+
+        // UPDATE product
+        app.patch('/products/:id', async (req, res) => {
+            const id = req.params.id;
+
+            const updatedDoc = req.body;
+
+            const filter = { _id: new ObjectId(id) }
+            console.log(id);
+
+            const result = await productsCollection.updateOne(filter, {
+                $set: updatedDoc
+            }
+            );
+            res.send(result)
+
+        });
 
 
 
