@@ -60,6 +60,12 @@ async function run() {
             res.send(result)
         })
 
+        // get all products
+        app.get('/products', async (req, res) => {
+            const products = await productsCollection.find().toArray()
+            res.send(products)
+        })
+
         // get new arrivals 
         app.get('/new-arrivals', async (req, res) => {
             const filter = { showcase: 'new-arrivals' }
@@ -89,12 +95,8 @@ async function run() {
         // UPDATE product
         app.patch('/products/:id', async (req, res) => {
             const id = req.params.id;
-
             const updatedDoc = req.body;
-
             const filter = { _id: new ObjectId(id) }
-            console.log(id);
-
             const result = await productsCollection.updateOne(filter, {
                 $set: updatedDoc
             }
